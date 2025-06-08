@@ -1,0 +1,32 @@
+My build system is Python
+My Name is Nsfr750
+My Email is nsfr750@yandex.com
+My Discord is https://discord.gg/BvvkUEP9
+my github is https://github.com/Nsfr750
+my paypal is https://paypal.me/3dmega
+my patreon is https://www.patreon.com/Nsfr750
+my Documentation system is sphinx with sphinx_rtd_theme
+my Documentation is in the docs folder
+my testing system is pytest
+my testing is in the tests folder
+my code style is black
+my code is in the src folder
+my project is in the project folder
+my TO_DO is in the TO_DO.md file
+my CHANGELOG is in the CHANGELOG.md file
+my version is in the version.py file
+my version.py follows Semantic Versioning 2.0.0
+my README is in the README.md file
+my license is GPL3
+my license is in the LICENSE file
+my app main is main.py
+my app is in the app folder
+my GUI is in the GUI folder
+my GUI is made with tkinter
+my app use dual language English and Italian
+my language file is lang.py
+my language file is in the lang folder
+my app use the language selected by the user
+my app use .json files to store configurations
+my app use .json files to store data
+my app use .json files to store logs
