@@ -100,6 +100,15 @@ def set_language(lang):
 def get_language():
     return _current_lang
 
+def get_available_languages():
+    """
+    Returns a list of available language codes.
+    
+    Returns:
+        list: List of language codes (e.g., ['en', 'it'])
+    """
+    return list(LANGUAGES.keys())
+
 def tr(key, **kwargs):
     text = LANGUAGES.get(_current_lang, LANGUAGES['en']).get(key, key)
     return text.format(**kwargs)
