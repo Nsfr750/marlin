@@ -54,23 +54,23 @@ class MarlinConfigurator(tk.Tk):
         main_frame.pack(fill=tk.BOTH, expand=True)
         
         # Connection frame
-        conn_frame = ttk.LabelFrame(main_frame, text="Printer Connection", padding="5")
+        conn_frame = ttk.LabelFrame(main_frame, text=tr('printer_connection'), padding="5")
         conn_frame.pack(fill=tk.X, pady=(0, 10))
         
         # Port selection
-        ttk.Label(conn_frame, text="Port:").grid(row=0, column=0, padx=5, pady=5, sticky='e')
+        ttk.Label(conn_frame, text=tr('port')).grid(row=0, column=0, padx=5, pady=5, sticky='e')
         self.port_combobox = ttk.Combobox(conn_frame, textvariable=self.port_var, width=20)
         self.port_combobox.grid(row=0, column=1, padx=5, pady=5, sticky='w')
         
         # Refresh ports button
         ttk.Button(
             conn_frame, 
-            text="Refresh", 
+            text=tr('refresh'), 
             command=self.update_ports
         ).grid(row=0, column=2, padx=5, pady=5)
         
         # Baud rate selection
-        ttk.Label(conn_frame, text="Baudrate:").grid(row=0, column=3, padx=5, pady=5, sticky='e')
+        ttk.Label(conn_frame, text=tr('baudrate')).grid(row=0, column=3, padx=5, pady=5, sticky='e')
         baudrates = ["9600", "19200", "38400", "57600", "115200", "230400", "250000"]
         baudrate_combobox = ttk.Combobox(
             conn_frame, 
@@ -83,7 +83,7 @@ class MarlinConfigurator(tk.Tk):
         # Connect/Disconnect button
         self.connect_btn = ttk.Button(
             conn_frame, 
-            text="Connect", 
+            text=tr('connect'), 
             command=self.toggle_connection,
             width=10
         )
@@ -92,7 +92,7 @@ class MarlinConfigurator(tk.Tk):
         # Connection status indicator
         self.status_indicator = ttk.Label(conn_frame, text="●", foreground="red")
         self.status_indicator.grid(row=0, column=6, padx=5, pady=5)
-        self.status_label = ttk.Label(conn_frame, text="Disconnected")
+        self.status_label = ttk.Label(conn_frame, text=tr('disconnected'))
         self.status_label.grid(row=0, column=7, padx=5, pady=5, sticky='w')
         
         # Store conn_frame reference for later use
@@ -180,12 +180,15 @@ class MarlinConfigurator(tk.Tk):
             self.connect_btn.configure(text="Disconnect")
             self.status_var.set(f"Connected to {port} @ {baudrate} baud")
             self.status_indicator.config(foreground="green")
-            self.status_label.config(text="Connected")
+            self.status_label.config(text=tr('connected').format(
+                port=self.port_var.get(), 
+                baudrate=self.baudrate_var.get()
+            ))
             messagebox.showinfo("Success", f"Connected to {port}")
         except Exception as e:
             self.connected = False
             self.status_indicator.config(foreground="red")
-            self.status_label.config(text="Disconnected")
+            self.status_label.config(text=tr('disconnected'))
             messagebox.showerror("Connection Error", f"Failed to connect: {str(e)}")
     
     def disconnect_printer(self):
@@ -194,7 +197,7 @@ class MarlinConfigurator(tk.Tk):
         self.connect_btn.configure(text="Connect")
         self.status_var.set("Disconnected")
         self.status_indicator.config(foreground="red")
-        self.status_label.config(text="Disconnected")
+        self.status_label.config(text=tr('disconnected'))
     
     def validate_config(self, config_data):
         """
