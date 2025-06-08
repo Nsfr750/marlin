@@ -2,12 +2,16 @@ import tkinter as tk
 from tkinter import ttk, messagebox, filedialog
 import yaml
 import serial.tools.list_ports
-from .code_editor import CodeEditor
-from .struttura.menu import create_menu_bar
-from .struttura.lang import tr, set_language
-from .struttura.traceback import log_exception
 import sys
 import os
+
+# Add the project root to the Python path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from app.code_editor import CodeEditor
+from struttura.menu import create_menu_bar
+from struttura.lang import tr, set_language
+from struttura.traceback import log_exception
 
 class MarlinConfigurator(tk.Tk):
     def __init__(self):
