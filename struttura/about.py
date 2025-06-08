@@ -18,7 +18,7 @@ class About:
         """
         about_dialog = tk.Toplevel(parent)
         about_dialog.title(tr('about'))
-        about_dialog.geometry('400x300')
+        about_dialog.geometry('400x500')
         about_dialog.resizable(False, False)
         about_dialog.transient(parent)
         about_dialog.grab_set()
@@ -50,11 +50,11 @@ class About:
             text=f"{tr('version')} {get_version()}",
             font=('Helvetica', 10)
         )
-        version_label.pack(pady=(0, 20))
+        version_label.pack(pady=(0, 10))
         
         # Description
         desc_frame = ttk.LabelFrame(container, text=tr('about_project'), padding=10)
-        desc_frame.pack(fill=tk.BOTH, expand=True, pady=(0, 20))
+        desc_frame.pack(fill=tk.BOTH, expand=True, pady=(0, 10))
         
         desc_text = tk.Text(
             desc_frame,

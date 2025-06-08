@@ -22,6 +22,8 @@
     "select_all": "Seleziona tutto",
     
     "line_numbers": "Numeri di riga",
+    "show_line_numbers": "Mostra/Nascondi numeri di riga",
+    "connection": "Connessione",
     "connect": "Connetti",
     "disconnect": "Disconnetti",
     "refresh_ports": "Aggiorna porte",
@@ -37,6 +39,8 @@
     
     "view_log": "Visualizza log",
     "about": "Informazioni",
+    "about_project": "Informazioni progetto",
+    "about_description": "",
     "sponsor": "Supporta",
     "help_text": "Aiuto",
     "version_info": "Informazioni versione",

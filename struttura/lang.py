@@ -94,10 +94,11 @@ _current_lang = _load_lang()
 def set_language(lang):
     global _current_lang
     if lang in LANGUAGES:
-        _current_lang = lang
-    else:
-        _current_lang = 'en'
-    _save_lang(_current_lang)
+        if _current_lang != lang:  # Only update if language is different
+            _current_lang = lang
+            _save_lang(_current_lang)
+            return True  # Return True if language was changed
+    return False  # Return False if language wasn't changed or is invalid
 
 def get_language():
     return _current_lang

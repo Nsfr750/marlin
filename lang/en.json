@@ -22,6 +22,8 @@
     "select_all": "Select All",
     
     "line_numbers": "Line Numbers",
+    "show_line_numbers": "Show/Hide Line Numbers",
+    "connection": "Connection",
     "connect": "Connect",
     "disconnect": "Disconnect",
     "refresh_ports": "Refresh Ports",
@@ -37,6 +39,8 @@
     
     "view_log": "View Log",
     "about": "About",
+    "about_project": "About Project",
+    "about_description": "",
     "sponsor": "Sponsor",
     "help_text": "Help",
     "version_info": "Version Info",

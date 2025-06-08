@@ -42,11 +42,8 @@
 ## Future Ideas
 - Add 3D printer bed visualization
 - Implement configuration wizard for beginners
-- Add support for cloud configuration storage
-- Create mobile companion app
 - Add configuration version control integration
 - Add printer status monitoring dashboard
-- Implement configuration backup to cloud
 - Add configuration templates sharing platform
 
 ## Notes

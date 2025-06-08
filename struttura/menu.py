@@ -21,7 +21,7 @@ def create_menu_bar(root, app) -> tk.Menu:
         app: The main application instance (MarlinConfigurator)
         
     Returns:
-        tk.Menu: The configured menu bar
+        tk.Menu: The configured menu bar with translations
     """
     menubar = tk.Menu(root)
     root.config(menu=menubar)
@@ -56,29 +56,35 @@ def create_menu_bar(root, app) -> tk.Menu:
     edit_menu = tk.Menu(menubar, tearoff=0)
     edit_menu.add_command(
         label=tr('undo'),
-        command=app.undo,
+        command=app.undo if hasattr(app, 'undo') else None,
         accelerator="Ctrl+Z"
     )
     edit_menu.add_command(
         label=tr('redo'),
-        command=app.redo,
+        command=app.redo if hasattr(app, 'redo') else None,
         accelerator="Ctrl+Y"
     )
     edit_menu.add_separator()
     edit_menu.add_command(
         label=tr('cut'),
-        command=app.cut,
+        command=app.cut if hasattr(app, 'cut') else None,
         accelerator="Ctrl+X"
     )
     edit_menu.add_command(
         label=tr('copy'),
-        command=app.copy,
+        command=app.copy if hasattr(app, 'copy') else None,
         accelerator="Ctrl+C"
     )
     edit_menu.add_command(
         label=tr('paste'),
-        command=app.paste,
+        command=app.paste if hasattr(app, 'paste') else None,
         accelerator="Ctrl+V"
+    )
+    edit_menu.add_separator()
+    edit_menu.add_command(
+        label=tr('select_all'),
+        command=app.select_all if hasattr(app, 'select_all') else None,
+        accelerator="Ctrl+A"
     )
     menubar.add_cascade(label=tr('edit'), menu=edit_menu)
 
@@ -87,7 +93,8 @@ def create_menu_bar(root, app) -> tk.Menu:
     if hasattr(app, 'toggle_line_numbers'):
         view_menu.add_checkbutton(
             label=tr('line_numbers'),
-            command=app.toggle_line_numbers
+            command=app.toggle_line_numbers,
+            variable=app.show_line_numbers if hasattr(app, 'show_line_numbers') else None
         )
     menubar.add_cascade(label=tr('view'), menu=view_menu)
 
@@ -95,7 +102,7 @@ def create_menu_bar(root, app) -> tk.Menu:
     if hasattr(app, 'toggle_connection'):
         connection_menu = tk.Menu(menubar, tearoff=0)
         connection_menu.add_command(
-            label=tr('connect'),
+            label=tr('connect') if not getattr(app, 'connected', False) else tr('disconnect'),
             command=app.toggle_connection
         )
         if hasattr(app, 'update_ports'):
@@ -116,7 +123,7 @@ def create_menu_bar(root, app) -> tk.Menu:
     # Help menu
     help_menu = tk.Menu(menubar, tearoff=0)
     help_menu.add_command(
-        label=tr('help'),
+        label=tr('help_text'),
         command=lambda: Help.show_help(root)
     )
     help_menu.add_separator()
