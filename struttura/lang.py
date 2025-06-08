@@ -102,12 +102,16 @@ def get_language():
 
 def get_available_languages():
     """
-    Returns a list of available language codes.
+    Returns a dictionary of available languages with their display names.
     
     Returns:
-        list: List of language codes (e.g., ['en', 'it'])
+        dict: Dictionary with language codes as keys and display names as values
+            Example: {'en': 'English', 'it': 'Italiano'}
     """
-    return list(LANGUAGES.keys())
+    return {
+        'en': 'English',
+        'it': 'Italiano'
+    }
 
 def tr(key, **kwargs):
     text = LANGUAGES.get(_current_lang, LANGUAGES['en']).get(key, key)
