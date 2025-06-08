@@ -109,8 +109,9 @@ class CodeEditor(ttk.Frame):
         self.v_scrollbar.config(command=self.text.yview)
         self.h_scrollbar.config(command=self.text.xview)
         
-        # Line numbers
+        # Line numbers (initially visible)
         self.line_numbers = LineNumbers(self.main_frame, self.text, width=50, bg='#f0f0f0', bd=0, highlightthickness=0)
+        self.line_numbers_visible = True
         self.line_numbers.pack(side=tk.LEFT, fill=tk.Y)
         
         # Right-click menu
@@ -214,6 +215,19 @@ class CodeEditor(ttk.Frame):
         except Exception as e:
             # If there's an error in lexing, just continue without highlighting
             pass
+    
+    def show_line_numbers(self):
+        """Show line numbers in the editor"""
+        if not hasattr(self, 'line_numbers_visible') or not self.line_numbers_visible:
+            self.line_numbers.pack(side=tk.LEFT, fill=tk.Y, before=self.text_frame)
+            self.line_numbers_visible = True
+            self.line_numbers.redraw()
+    
+    def hide_line_numbers(self):
+        """Hide line numbers in the editor"""
+        if hasattr(self, 'line_numbers_visible') and self.line_numbers_visible:
+            self.line_numbers.pack_forget()
+            self.line_numbers_visible = False
     
     def get(self, *args, **kwargs):
         return self.text.get(*args, **kwargs)

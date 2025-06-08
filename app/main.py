@@ -30,6 +30,7 @@ class MarlinConfigurator(tk.Tk):
         self.connected = False
         self.current_file = None
         self.modified = False
+        self.show_line_numbers = tk.BooleanVar(value=True)  # Track line numbers visibility
         
         # Configure style
         self.style = ttk.Style()
@@ -88,11 +89,26 @@ class MarlinConfigurator(tk.Tk):
         )
         self.connect_btn.grid(row=0, column=5, padx=5, pady=5)
         
-        # Notebook for tabs
-        self.notebook = ttk.Notebook(main_frame)
-        self.notebook.pack(fill=tk.BOTH, expand=True)
+        # Connection status indicator
+        self.status_indicator = ttk.Label(conn_frame, text="●", foreground="red")
+        self.status_indicator.grid(row=0, column=6, padx=5, pady=5)
+        self.status_label = ttk.Label(conn_frame, text="Disconnected")
+        self.status_label.grid(row=0, column=7, padx=5, pady=5, sticky='w')
         
-        # Editor tab
+        # Store conn_frame reference for later use
+        self.conn_frame = conn_frame
+        
+        # Create notebook first
+        self.notebook = ttk.Notebook(main_frame)
+        
+        # Now create validation frame with notebook as parent
+        self.validation_frame = ttk.LabelFrame(main_frame, text="Configuration Status", padding="5")
+        
+        # Pack notebook first, then validation frame
+        self.notebook.pack(fill=tk.BOTH, expand=True)
+        self.validation_frame.pack(fill=tk.X, pady=(0, 10))
+        
+        # Add editor tab
         self.setup_editor_tab()
         
         # Status bar
@@ -105,15 +121,34 @@ class MarlinConfigurator(tk.Tk):
             anchor=tk.W
         )
         status_bar.pack(side=tk.BOTTOM, fill=tk.X)
+        
+        # Initialize validation status
+        self.validation_status = ttk.Label(
+            self.validation_frame, 
+            text="No configuration loaded",
+            foreground="gray"
+        )
+        self.validation_status.pack(fill=tk.X, padx=5, pady=5)
     
     def setup_editor_tab(self):
         """Set up the editor tab with the code editor"""
         self.editor_tab = ttk.Frame(self.notebook)
         self.notebook.add(self.editor_tab, text="Editor")
         
-        # Create editor
+        # Create editor with line numbers
         self.editor = CodeEditor(self.editor_tab)
         self.editor.pack(fill=tk.BOTH, expand=True)
+        
+        # Initialize line numbers based on the current setting
+        self.toggle_line_numbers()
+    
+    def toggle_line_numbers(self):
+        """Toggle line numbers in the editor"""
+        self.show_line_numbers.set(not self.show_line_numbers.get())
+        if self.show_line_numbers.get():
+            self.editor.show_line_numbers()
+        else:
+            self.editor.hide_line_numbers()
     
     def update_ports(self):
         """Update the list of available serial ports"""
@@ -144,8 +179,13 @@ class MarlinConfigurator(tk.Tk):
             self.connected = True
             self.connect_btn.configure(text="Disconnect")
             self.status_var.set(f"Connected to {port} @ {baudrate} baud")
+            self.status_indicator.config(foreground="green")
+            self.status_label.config(text="Connected")
             messagebox.showinfo("Success", f"Connected to {port}")
         except Exception as e:
+            self.connected = False
+            self.status_indicator.config(foreground="red")
+            self.status_label.config(text="Disconnected")
             messagebox.showerror("Connection Error", f"Failed to connect: {str(e)}")
     
     def disconnect_printer(self):
@@ -153,6 +193,67 @@ class MarlinConfigurator(tk.Tk):
         self.connected = False
         self.connect_btn.configure(text="Connect")
         self.status_var.set("Disconnected")
+        self.status_indicator.config(foreground="red")
+        self.status_label.config(text="Disconnected")
+    
+    def validate_config(self, config_data):
+        """
+        Validate the configuration data
+        
+        Args:
+            config_data (dict): The configuration data to validate
+            
+        Returns:
+            tuple: (is_valid, errors) where is_valid is a boolean and errors is a list of error messages
+        """
+        errors = []
+        
+        # Check for required top-level sections
+        required_sections = ['configuration', 'pins', 'temperature', 'motion']
+        for section in required_sections:
+            if section not in config_data:
+                errors.append(f"Missing required section: {section}")
+        
+        # Check for required configuration values
+        if 'configuration' in config_data:
+            config = config_data['configuration']
+            if 'firmware_name' not in config:
+                errors.append("Missing required configuration: firmware_name")
+            if 'firmware_version' not in config:
+                errors.append("Missing required configuration: firmware_version")
+        
+        # Add more validation rules as needed
+        
+        return len(errors) == 0, errors
+    
+    def update_validation_status(self, config_data):
+        """Update the validation status in the UI"""
+        if not config_data:
+            self.validation_status.config(
+                text="No configuration loaded",
+                foreground="gray"
+            )
+            return
+            
+        is_valid, errors = self.validate_config(config_data)
+        
+        if is_valid:
+            self.validation_status.config(
+                text="✓ Configuration is valid",
+                foreground="green"
+            )
+        else:
+            error_text = "Configuration errors: " + ", ".join(errors[:3])
+            if len(errors) > 3:
+                error_text += f"... and {len(errors) - 3} more"
+            self.validation_status.config(
+                text=error_text,
+                foreground="red"
+            )
+            
+            # Show detailed errors in status bar
+            if errors:
+                self.status_var.set(f"Validation error: {errors[0]}")
     
     def load_config(self, event=None):
         """Load configuration from a file"""
@@ -167,9 +268,14 @@ class MarlinConfigurator(tk.Tk):
             with open(file_path, 'r') as f:
                 config_data = yaml.safe_load(f)
                 self.editor.delete('1.0', tk.END)
-                self.editor.insert(tk.END, yaml.dump(config_data, default_flow_style=False))
+                yaml_str = yaml.dump(config_data, default_flow_style=False)
+                self.editor.insert(tk.END, yaml_str)
                 self.current_file = file_path
                 self.status_var.set(f"Loaded {os.path.basename(file_path)}")
+                
+                # Update validation status
+                self.update_validation_status(config_data)
+                
         except Exception as e:
             messagebox.showerror("Error", f"Failed to load file: {str(e)}")
     
@@ -181,9 +287,27 @@ class MarlinConfigurator(tk.Tk):
         
         try:
             config_data = yaml.safe_load(self.editor.get('1.0', tk.END))
+            
+            # Validate before saving
+            is_valid, errors = self.validate_config(config_data)
+            if not is_valid:
+                if messagebox.askyesno(
+                    "Validation Errors",
+                    f"Found {len(errors)} validation error(s). Save anyway?\n\n" +
+                    "\n".join(f"• {error}" for error in errors[:5])
+                ):
+                    # User chose to save anyway
+                    pass
+                else:
+                    return
+            
             with open(self.current_file, 'w') as f:
                 yaml.dump(config_data, f, default_flow_style=False)
             self.status_var.set(f"Saved {os.path.basename(self.current_file)}")
+            
+            # Update validation status
+            self.update_validation_status(config_data)
+            
         except Exception as e:
             messagebox.showerror("Error", f"Failed to save file: {str(e)}")
     

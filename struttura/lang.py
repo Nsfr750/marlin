@@ -82,10 +82,12 @@ def _load_lang():
 
 def _save_lang(lang):
     try:
+        # Ensure the directory exists
+        os.makedirs(os.path.dirname(CONFIG_PATH), exist_ok=True)
         with open(CONFIG_PATH, 'w', encoding='utf-8') as f:
-            json.dump({'language': lang}, f)
-    except Exception:
-        pass
+            json.dump({'language': lang}, f, ensure_ascii=False, indent=4)
+    except Exception as e:
+        print(f"Error saving language preference: {e}")
 
 _current_lang = _load_lang()
 

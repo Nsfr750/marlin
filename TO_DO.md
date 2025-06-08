@@ -1,41 +1,43 @@
 # To Do List
 
 ## High Priority
-- [ ] Implement configuration validation
-- [ ] Add printer connection status indicator
+- [x] Implement configuration validation
+- [x] Add printer connection status indicator
 - [ ] Create configuration templates for common printer models
-- [ ] Add support for more languages
 - [ ] Implement configuration diff tool
+- [ ] Add configuration import/export functionality
+- [ ] Implement configuration backup system
 
 ## Medium Priority
-- [ ] Add keyboard shortcut customization
-- [ ] Implement configuration backup system
-- [ ] Add dark/light theme support
-- [ ] Create user guide and documentation
+- [x] Add keyboard shortcut customization
 - [ ] Add unit tests for core functionality
 - [ ] Implement configuration profiles
+- [ ] Add search functionality in configuration
+- [ ] Implement dark/light theme support
+- [ ] Add configuration validation rules editor
 
 ## Low Priority
 - [ ] Add support for more file formats
 - [ ] Implement plugin system for extensions
 - [ ] Add configuration sharing functionality
-- [ ] Create video tutorials
-- [ ] Add more printer-specific presets
+- [ ] Implement auto-save functionality
+- [ ] Add recent files menu
+- [ ] Add configuration comparison tool
 
-## In Progress
-- [x] Refactor language system to use JSON files
-- [x] Update UI components for better consistency
-- [x] Implement comprehensive error handling
-
-## Completed
+## Completed 
 - [x] Set up project structure
 - [x] Create basic GUI layout
+- [x] Implement configuration file loading/saving
+- [x] Add serial communication with printer
 - [x] Implement code editor with syntax highlighting
-- [x] Add support for multiple languages
+- [x] Add support for multiple languages (English/Italian)
 - [x] Create about and help dialogs
 - [x] Implement version management
 - [x] Add sponsor/donation dialog
 - [x] Set up logging system
+- [x] Add line number toggle in editor
+- [x] Fix language selection and persistence
+- [x] Add configuration status validation UI
 
 ## Future Ideas
 - Add 3D printer bed visualization
@@ -43,6 +45,9 @@
 - Add support for cloud configuration storage
 - Create mobile companion app
 - Add configuration version control integration
+- Add printer status monitoring dashboard
+- Implement configuration backup to cloud
+- Add configuration templates sharing platform
 
 ## Notes
 - Keep UI responsive during long operations
@@ -50,3 +55,6 @@
 - Follow PEP 8 style guide
 - Write docstrings for all public methods
 - Add type hints for better code maintainability
+- Document all configuration options
+- Add tooltips for UI elements
+- Implement keyboard shortcuts documentation
